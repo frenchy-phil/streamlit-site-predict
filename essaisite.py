@@ -14,11 +14,10 @@ import pickle
 data=pd.read_csv('df_test_sample.csv')
 listid=data['SK_ID_CURR'].tolist()
 model = pickle.load(open('model.pkl','rb'))
-#valid_x=pd.read_csv('valid_x2.csv')
 shap_values=np.load('shap-values.npy')
 
 
-endpoint='http://localhost:6502'
+endpoint='https://backend-predict.herokuapp.com'
 
 def score(id):
     response = requests.post(endpoint+'/predict', json={'text': id})
@@ -47,16 +46,7 @@ id_input = st.selectbox("Choisissez l'identifiant d'un client", data.SK_ID_CURR)
 result=score(id_input)
 st.metric(label= 'probabilite de remboursement', value=1-result[0])
 
-#response_shapley = requests.post(endpoint+'/shap', json = data.query(f'SK_ID_CURR == {id_input}').index.values.tolist()[0])
-#decodedArrays = json.loads(response_shapley.text)
 
-
-
-#shap_v=np.array(decodedArrays['shap_values'])
-#shap_v_1= np.array(shap_v, dtype=float)
-#shap_v_2= np.reshape(shap_v_1, (368,1))
-
-#expected_values=np.load('shap-values.npy').item()
 
 st.title('Graphe de decision')
 st.set_option('deprecation.showPyplotGlobalUse', False)
