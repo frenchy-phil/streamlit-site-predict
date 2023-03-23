@@ -1,15 +1,13 @@
+from pycaret.regression import load_model, predict_model
 import streamlit as st
-#from flask import Flask, request
-import requests
-import shap
-import streamlit.components.v1 as components
 import pandas as pd
-import json
 import numpy as np
-from PIL import Image
+
+
 import seaborn as sns
 import matplotlib.pyplot as plt 
 import pickle
+import shap
 
 data=pd.read_csv('df_test_sample.csv')
 listid=data['SK_ID_CURR'].tolist()
