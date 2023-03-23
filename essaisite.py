@@ -12,7 +12,7 @@ import shap
 data=pd.read_csv('df_test_sample.csv')
 listid=data['SK_ID_CURR'].tolist()
 model = pickle.load(open('model.pkl','rb'))
-shap_values=np.load('shap-values.npy')
+#shap_values=np.load('shap-values.npy')
 
 
 endpoint='https://backend-predict.herokuapp.com'
@@ -29,10 +29,9 @@ def indix(id):
 def shap_plot(j):
     explainerModel = shap.TreeExplainer(model)
     
-    p = shap.decision_plot(explainerModel.expected_value[0],shap_values[j],feature_names= list(data.columns), ignore_warnings=True)
+    shap_values = explainerModel.shap_values(data)
+    p = shap.decision_plot(explainerModel.expected_value[0],shap_values[0][j],valid_x, ignore_warnings=True)
     return(p)
-
-
 
 #titre et autre
 st.title("CREDIT PREDICTION")
@@ -46,11 +45,12 @@ st.metric(label= 'probabilite de remboursement', value=1-result[0])
 
 
 
-st.title('Graphe de decision')
+ #GRAPHE1
+st.header('Graphe de decision')
 st.set_option('deprecation.showPyplotGlobalUse', False)
-p=shap_plot(indix(id_input))
-#p=shap.decision_plot(expected_values, shap_v_1, valid_x, ignore_warnings=True)
-st.pyplot(p)
+    
+implt=shap_plot(indix(id_input))
+st.pyplot(implt)
 
 enumeration=['NAME_INCOME_TYPE_Working','CODE_GENDER_M', 'NAME_FAMILY_STATUS_Married', 'REGION_RATING_CLIENT_W_CITY', 'AMT_CREDIT' ]
 fig, ax = plt.subplots()
